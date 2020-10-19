@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
-import { withBookstoreService } from '../hoc';
 import BookListItem from '../book-list-item';
 
 class BookList extends Component {
@@ -17,4 +17,8 @@ class BookList extends Component {
 
 };
 
-export default withBookstoreService()(BookList);
+const mapStateToProps = ({books}) => {
+  return { books }
+};
+
+export default connect(mapStateToProps)(BookList);
