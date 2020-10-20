@@ -1,26 +1,38 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 
 import BookListItem from '../book-list-item';
 import { withBookstoreService } from '../hoc';
-import { booksLoaded } from '../../actions';
+import {
+  booksLoaded,
+  booksRequested
+} from '../../actions';
 import { compose } from '../../utils';
 
 class BookList extends Component {
 
   componentDidMount() {
-    const { bookstoreService, booksLoaded } = this.props;
-    const data = bookstoreService.getBooks();
+    const { bookstoreService, booksLoaded, booksRequested } = this.props;
 
-    booksLoaded(data);
+    booksRequested();
+    bookstoreService
+      .getBooks()
+      .then((data) => booksLoaded(data));
   }
 
   render() {
+    const { books, loading } = this.props;
+
+    if (loading) {
+      return (
+        <p>Loading...</p>
+      );
+    }
+
     return (
       <ul className="book-list">
         {
-          this.props.books.map((book) => {
+          books.map((book) => {
             return (
               <BookListItem
                 book={book}
@@ -34,14 +46,16 @@ class BookList extends Component {
 
 };
 
-const mapStateToProps = ({books}) => {
-  return { books }
+const mapStateToProps = ({books, loading}) => {
+  return {
+    books,
+    loading
+  }
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({
-    booksLoaded
-  }, dispatch);
+const mapDispatchToProps = {
+  booksLoaded,
+  booksRequested
 };
 
 export default compose(
