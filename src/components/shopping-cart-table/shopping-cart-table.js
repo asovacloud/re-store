@@ -54,7 +54,6 @@ const ShoppingCartTable = ({ items, total, onIncrease, onDecrease, onDelete }) =
           </tr>
         </thead>
 
-        { console.log('items: ', items) }
         <tbody>
           {
             items.map(renderRow)
